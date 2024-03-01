@@ -1,0 +1,26 @@
+update_brightness() {
+    if [ $1 -ge 100 ] && [ $1 -le 10000 ]; then
+        echo $1 | tee /sys/class/backlight/intel_backlight/brightness >/dev/null
+        return 0
+    else
+        echo "Brightness value out of range (100-10000)"
+        return 1
+    fi
+}
+
+# Check if argument is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: brightness <brightness_value>"
+    exit 1
+fi
+
+# Check if the input value is an integer
+if ! [[ $1 =~ ^[0-9]+$ ]]; then
+    echo "Please enter valid integer."
+    exit 1
+fi
+
+if ! update_brightness "$1"; then
+    exit 1
+fi
+
